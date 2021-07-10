@@ -18,9 +18,18 @@ router.get('/', async (req, res) => {
   res.json(categories)
 });
 
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
   // find one category by its `id` value
+  let id = req.url.split("/")[req.url.split("/").length - 1];
+  const categories = await Category.findAll({where: {id}})
   // be sure to include its associated Products
+  categories[0].dataValues.products = []
+  const products = await Product.findAll({where: {category_id: categories[0].id}})
+  for (let j in products) {
+    delete products[j].dataValues.categoryId
+    categories[0].dataValues.products.push(products[j])
+  }
+  res.json(categories)
 });
 
 router.post('/', (req, res) => {
