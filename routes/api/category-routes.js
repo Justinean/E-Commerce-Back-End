@@ -3,9 +3,19 @@ const { Category, Product } = require('../../models');
 
 // The `/api/categories` endpoint
 
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
   // find all categories
+  const categories = await Category.findAll();
   // be sure to include its associated Products
+  for (let i in categories) {
+    categories[i].dataValues.products = []
+    const products = await Product.findAll({where: {category_id: categories[i].id}})
+    for (let j in products) {
+      delete products[j].dataValues.categoryId
+      categories[i].dataValues.products.push(products[j])
+    }
+  }
+  res.json(categories)
 });
 
 router.get('/:id', (req, res) => {
