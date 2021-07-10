@@ -32,8 +32,15 @@ router.get('/:id', async (req, res) => {
   res.json(categories)
 });
 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   // create a new category
+  let category_name = req.body.category_name
+  const [user, created] = await Category.findOrCreate({where: {category_name}})
+  if (created) {
+    res.json(user)
+  } else {
+    res.json({message: "Category name already exists!"})
+  }
 });
 
 router.put('/:id', (req, res) => {
