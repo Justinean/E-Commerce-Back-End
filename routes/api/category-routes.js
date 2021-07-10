@@ -43,8 +43,23 @@ router.post('/', async (req, res) => {
   }
 });
 
-router.put('/:id', (req, res) => {
+router.put('/:id', async (req, res) => {
   // update a category by its `id` value
+  let id = req.url.split("/")[req.url.split("/").length - 1];
+  await Category.update({category_name: req.body.category_name}, {where: {id}});
+  const categories = await Category.findOne({where: {id}})
+  // be sure to include its associated Products
+  const products = await Product.findAll({where: {category_id: categories.id}})
+  if (products.length > 0) {
+    categories.dataValues.products = []
+    for (let j in products) {
+      delete products[j].dataValues.categoryId
+      categories.dataValues.products.push(products[j])
+    }
+  } else {
+    categories.dataValues.products = "No products found!"
+  }
+  res.json(categories)
 });
 
 router.delete('/:id', (req, res) => {
