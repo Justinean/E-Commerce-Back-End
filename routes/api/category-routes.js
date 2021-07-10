@@ -20,7 +20,7 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
   // find one category by its `id` value
-  let id = req.url.split("/")[req.url.split("/").length - 1];
+  let id = req.params.id
   const categories = await Category.findAll({where: {id}})
   // be sure to include its associated Products
   categories[0].dataValues.products = []
@@ -45,7 +45,6 @@ router.post('/', async (req, res) => {
 
 router.put('/:id', async (req, res) => {
   // update a category by its `id` value
-  console.log(req)
   let id = req.params.id
   await Category.update({category_name: req.body.category_name}, {where: {id}});
   const categories = await Category.findOne({where: {id}})
