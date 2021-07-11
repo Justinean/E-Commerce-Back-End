@@ -3,9 +3,20 @@ const { Tag, Product, ProductTag } = require('../../models');
 
 // The `/api/tags` endpoint
 
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
   // find all tags
+  const tags = await Tag.findAll();
   // be sure to include its associated Product data
+  for (let i in tags) {
+    const productTags = await ProductTag.findAll({where: {tag_id: tags[i].dataValues.id}});
+    tags[i].dataValues.products = [];
+    for (let j in productTags) {
+      const product = await Product.findByPk(productTags[j].dataValues.product_id);
+      delete product.dataValues.categoryId;
+      tags[i].dataValues.products.push(product);
+    }
+  }
+  res.json(tags);
 });
 
 router.get('/:id', (req, res) => {
