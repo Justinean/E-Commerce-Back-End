@@ -45,8 +45,20 @@ router.post('/', async (req, res) => {
   }
 });
 
-router.put('/:id', (req, res) => {
+router.put('/:id', async (req, res) => {
   // update a tag's name by its `id` value
+  let id = req.params.id;
+  await Tag.update({tag_name: req.body.tag_name}, {where: {id}});
+  const tag = await Tag.findByPk(id);
+  const productTags = await ProductTag.findAll({where: {tag_id: tag.dataValues.id}});
+    tag.dataValues.products = [];
+    for (let j in productTags) {
+      const product = await Product.findByPk(productTags[j].dataValues.product_id);
+      delete product.dataValues.categoryId;
+      tag.dataValues.products.push(product);
+    }
+  // be sure to include its associated Product data
+  res.json(tag);
 });
 
 router.delete('/:id', (req, res) => {
