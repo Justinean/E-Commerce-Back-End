@@ -23,9 +23,21 @@ router.get('/', async (req, res) => {
 });
 
 // get one product
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
   // find a single product by its `id`
+  let id = req.params.id
+  const product = await Product.findByPk(id)
   // be sure to include its associated Category and Tag data
+  delete product.dataValues.categoryId
+    const category = await Category.findByPk(product.dataValues.category_id, {attributes: ['category_name']});
+    product.dataValues.category = category;
+    const productTags = await ProductTag.findAll({attributes: ['tag_id'], where: {product_id: product.id}});
+    product.dataValues.tags = [];
+    for (let j in productTags) {
+      const tag = await Tag.findByPk(productTags[j].tag_id);
+      product.dataValues.tags.push(tag);
+    }
+  res.json(product)
 });
 
 // create new product
