@@ -19,9 +19,19 @@ router.get('/', async (req, res) => {
   res.json(tags);
 });
 
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
   // find a single tag by its `id`
+  let id = req.params.id;
+  const tag = await Tag.findByPk(id)
+  const productTags = await ProductTag.findAll({where: {tag_id: tag.dataValues.id}});
+    tag.dataValues.products = [];
+    for (let j in productTags) {
+      const product = await Product.findByPk(productTags[j].dataValues.product_id);
+      delete product.dataValues.categoryId;
+      tag.dataValues.products.push(product);
+    }
   // be sure to include its associated Product data
+  res.json(tag)
 });
 
 router.post('/', (req, res) => {
