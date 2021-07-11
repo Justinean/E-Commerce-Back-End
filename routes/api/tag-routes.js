@@ -34,8 +34,15 @@ router.get('/:id', async (req, res) => {
   res.json(tag)
 });
 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   // create a new tag
+  let tag_name = req.body.tag_name
+  const [tag, created] = await Tag.findOrCreate({where: {tag_name}})
+  if (created) {
+    res.status(200).json(tag)
+  } else {
+    res.status(400).json({message: "Tag name already exists!"})
+  }
 });
 
 router.put('/:id', (req, res) => {
