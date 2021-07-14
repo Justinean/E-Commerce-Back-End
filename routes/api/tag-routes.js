@@ -12,7 +12,6 @@ router.get('/', async (req, res) => {
     tags[i].dataValues.products = [];
     for (let j in productTags) {
       const product = await Product.findByPk(productTags[j].dataValues.product_id);
-      delete product.dataValues.categoryId;
       tags[i].dataValues.products.push(product);
     }
   }
@@ -27,7 +26,6 @@ router.get('/:id', async (req, res) => {
     tag.dataValues.products = [];
     for (let j in productTags) {
       const product = await Product.findByPk(productTags[j].dataValues.product_id);
-      delete product.dataValues.categoryId;
       tag.dataValues.products.push(product);
     }
   // be sure to include its associated Product data
@@ -54,7 +52,6 @@ router.put('/:id', async (req, res) => {
     tag.dataValues.products = [];
     for (let j in productTags) {
       const product = await Product.findByPk(productTags[j].dataValues.product_id);
-      delete product.dataValues.categoryId;
       tag.dataValues.products.push(product);
     }
   // be sure to include its associated Product data

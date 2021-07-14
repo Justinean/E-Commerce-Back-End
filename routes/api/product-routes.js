@@ -9,9 +9,8 @@ router.get('/', async (req, res) => {
   const products = await Product.findAll();
   // be sure to include its associated Category and Tag data
   for (let i in products) {
-    delete products[i].dataValues.categoryId
     const category = await Category.findByPk(products[i].dataValues.category_id, {attributes: ['category_name']});
-    products[i].dataValues.category = category;
+    products[i].dataValues.category_name = category.category_name;
     const productTags = await ProductTag.findAll({attributes: ['tag_id'], where: {product_id: products[i].id}});
     products[i].dataValues.tags = [];
     for (let j in productTags) {
@@ -28,7 +27,6 @@ router.get('/:id', async (req, res) => {
   let id = req.params.id
   const product = await Product.findByPk(id)
   // be sure to include its associated Category and Tag data
-  delete product.dataValues.categoryId
     const category = await Category.findByPk(product.dataValues.category_id, {attributes: ['category_name']});
     product.dataValues.category = category;
     const productTags = await ProductTag.findAll({attributes: ['tag_id'], where: {product_id: product.id}});

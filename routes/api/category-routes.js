@@ -11,7 +11,6 @@ router.get('/', async (req, res) => {
     categories[i].dataValues.products = []
     const products = await Product.findAll({where: {category_id: categories[i].id}})
     for (let j in products) {
-      delete products[j].dataValues.categoryId
       categories[i].dataValues.products.push(products[j])
     }
   }
@@ -26,7 +25,6 @@ router.get('/:id', async (req, res) => {
   categories[0].dataValues.products = []
   const products = await Product.findAll({where: {category_id: categories[0].id}})
   for (let j in products) {
-    delete products[j].dataValues.categoryId
     categories[0].dataValues.products.push(products[j])
   }
   res.json(categories)
@@ -53,7 +51,6 @@ router.put('/:id', async (req, res) => {
   if (products.length > 0) {
     categories.dataValues.products = []
     for (let j in products) {
-      delete products[j].dataValues.categoryId
       categories.dataValues.products.push(products[j])
     }
   } else {
