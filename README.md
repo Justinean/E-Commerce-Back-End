@@ -22,6 +22,8 @@ This is a web application where you can add, update and delete categories, produ
 
 Go into the folder that you just cloned, open git bash or terminal, type "npm i", fill out the .env.EXAMPLE file and rename the file to .env. You would then run the schema.sql in the db folder in mysql workbench. Once all of that is done you can seed the database by running the command "npm run seed" and then npm start to run the server.
 
+![Screenshot of the application](./images/project.PNG)
+
 # License:
 
 This project is licensed under the MIT license, which you can read about [here](https://opensource.org/licenses/MIT).
